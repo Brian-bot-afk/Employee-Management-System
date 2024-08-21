@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tech Titan EMS</title>
+    <style>
+        body {
+            background-image: url('cyber1.jpg'); /* Correct path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        }
+        td, th {
+            border: 1px solid #09749e;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #0f9e86;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 5px;
+        }
+        h2 {
+            background-color: rgb(44, 88, 131);
+            color: white;
+            padding: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div>
+        <h2>Employee Management System</h2>
+    </div>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Post</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+        <% data.forEach(element => { %>
+        <tr>
+            <td><%= element.employeeId %></td>
+            <td><%= element.employeeName %></td>
+            <td><%= element.employeePost %></td>
+            <td><%= element.employeeSalary %></td>
+            <td>
+                <form action="/delete" method="post" class="deleteForm">
+                    <input type="hidden" name="employeeId" value="<%= element.employeeId %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+    </table>
+    <h2>Add Employee</h2>
+    <form action="/" method="post" id="addEmployeeForm">
+        <input type="text" placeholder="Employee Name" name="employeeName" required>
+        <input type="text" placeholder="Employee Post" name="employeePost">
+        <input type="number" placeholder="Employee Salary" name="employeeSalary">
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Update Employee</h2>
+    <form action="/update" method="post" id="updateEmployeeForm">
+        <input type="text" placeholder="Employee Id" name="employeeId" required>
+        <input type="text" placeholder="Employee Name" name="employeeName" required>
+        <input type="text" placeholder="Employee Post" name="employeePost">
+        <input type="number" placeholder="Employee Salary" name="employeeSalary">
+        <button type="submit">Update</button>
+    </form>
+
+    <script>
+    $(document).ready(function() {
+        $('#addEmployeeForm, #updateEmployeeForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: xhr.responseJSON.error
+                    });
+                }
+            });
+        });
+
+        $('.deleteForm').on('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/delete',
+                        method: 'POST',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'An error occurred while deleting the employee.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

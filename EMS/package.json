@@ -1,0 +1,22 @@
+{
+  "name": "ems",
+  "version": "1.0.0",
+  "description": "Employee Managment System",
+  "main": "index.js",
+  "scripts": {
+    "test": "add"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Employee Management System"
+  },
+  "author": "Brian Wambua",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7"
+  }
+}
